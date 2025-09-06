@@ -367,10 +367,20 @@ if analyze and symbol:
 
                 if data.empty:
                     st.error(f"لا يمكن العثور على بيانات للسهم {symbol}")
-                    st.info("تأكد من:")
-                    st.write("- صحة رمز السهم")
-                    st.write("- الاتصال بالإنترنت")
-                    st.write("- أن السهم متداول في البورصة الأمريكية")
+                    
+                    # تفاصيل المساعدة
+                    with st.expander("تفاصيل المشكلة وحلول"):
+                        st.write("**أسباب محتملة:**")
+                        st.write("1. مشاكل مؤقتة في خوادم Yahoo Finance")
+                        st.write("2. رمز السهم غير صحيح")
+                        st.write("3. قيود على عدد الطلبات (Rate Limiting)")
+                        st.write("4. مشاكل في الاتصال بالإنترنت")
+                        
+                        st.write("**حلول مقترحة:**")
+                        st.write("1. انتظر 5-10 دقائق ثم حاول مرة أخرى")
+                        st.write("2. تأكد من صحة رمز السهم")
+                        st.write("3. جرب رموز أخرى أولاً")
+                        st.write("4. تحقق من اتصال الإنترنت")
                     
                     # اقتراح رموز بديلة
                     st.write("جرب هذه الرموز:")
@@ -383,13 +393,16 @@ if analyze and symbol:
                                 st.session_state.selected_stock = stock_symbol
                                 st.rerun()
                 else:
-                    # تنظيف البيانات
-                    data = data.dropna()
+                    # فحص جودة البيانات
+                    if analyze_data_quality(data, symbol):
+                        
+                        # تنظيف البيانات
+                        data = data.dropna()
 
-                    if len(data) < 10:
-                        st.error("البيانات المتوفرة قليلة جداً للتحليل")
-                        st.info(f"متوفر فقط {len(data)} نقطة بيانات، نحتاج على الأقل 10")
-                    else:
+                        if len(data) < 10:
+                            st.error("البيانات المتوفرة قليلة جداً للتحليل")
+                            st.info(f"متوفر فقط {len(data)} نقطة بيانات، نحتاج على الأقل 10")
+                        else:
                         # حساب المؤشرات
                         try:
                             data['SMA20'] = data['Close'].rolling(20, min_periods=5).mean()
