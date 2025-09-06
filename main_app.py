@@ -404,7 +404,7 @@ if analyze and symbol:
                             st.info(f"متوفر فقط {len(data)} نقطة بيانات، نحتاج على الأقل 10")
                         else:
                         # حساب المؤشرات
-                        try:
+                            try:
                             data['SMA20'] = data['Close'].rolling(20, min_periods=5).mean()
                             data['SMA50'] = data['Close'].rolling(50, min_periods=10).mean()
                             data['RSI'] = calculate_rsi(data['Close'])
